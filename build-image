@@ -14,7 +14,7 @@ if [ -f $image ]; then
 	exit 1
 fi
 
-truncate -s 1G $image
+truncate -s 650M $image
 
 ggatel create -u $unit $image
 
