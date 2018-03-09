@@ -1,0 +1,78 @@
+#!/bin/sh
+
+set -ex
+
+base_image_tarball=out/eve-20180309.txz
+eve_tarball=/tmp/eVe.tgz
+
+unit=0
+
+image=eve-image
+
+if [ -f $image ]; then
+	echo "File exists: $image" >&2
+	exit 1
+fi
+
+truncate -s 1G $image
+
+ggatel create -u $unit $image
+
+gpart create -s MBR ggate${unit}
+gpart add -a 63 -b 63 -t '!12' -s 2M ggate${unit}
+gpart add -a 512k -t freebsd ggate${unit}
+
+gpart set -a active -i 1 ggate${unit}
+
+newfs_msdos -F 12 /dev/ggate${unit}s1
+
+gpart create -s BSD ggate${unit}s2
+gpart add -t freebsd-ufs -a 64k ggate${unit}s2
+
+newfs /dev/ggate${unit}s2a
+
+
+
+target=$(mktemp -d)
+
+mount /dev/ggate${unit}s2a $target
+
+tar xf "${base_image_tarball}" -C $target
+
+mount_msdosfs /dev/ggate${unit}s1 $target/mnt
+cp /usr/local/share/u-boot/u-boot-beaglebone/MLO $target/mnt
+cp /usr/local/share/u-boot/u-boot-beaglebone/u-boot.img $target/mnt
+cp $target/boot/ubldr $target/mnt
+cp $target/boot/ubldr.bin $target/mnt
+umount $target/mnt
+
+cp /usr/local/bin/qemu-arm-static $target/usr/local/bin
+chroot $target /usr/sbin/pw user add freebsd
+mkdir -p $target/home/freebsd
+tar zxf "${eve_tarball}" -C $target/home/freebsd
+chroot $target /usr/sbin/chown -R freebsd:freebsd /home/freebsd
+
+mount -t devfs devfs $target/dev
+chroot $target /usr/bin/su - freebsd -c 'sh -c "cd /home/freebsd/eVe && bundle install --without electron rhodes development --deployment"'
+umount $target/dev
+
+# /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/util/common_util.rb:177:in `key=': key must be 16 bytes (ArgumentError)
+#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/util/common_util.rb:177:in `encrypt'
+#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-client-core-0.2.58/libs/eve-client-core/eve-client-core/db/client_db.rb:103:in `insert_object'
+#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-client-core-0.2.58/libs/eve-client-core/eve-client-core/db/client_db.rb:322:in `insert_default_objects'
+#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-client-core-0.2.58/libs/eve-client-core/eve-client-core/db/client_db.rb:304:in `do_db_initialize'
+#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/db/base_db.rb:48:in `db_initialize'
+#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/electron-util-0.3.23/libs/electron-util/app/base_electron_application.rb:52:in `initialize'
+#         from app/electron_application.rb:25:in `initialize'
+#         from app/electron_application.rb:65:in `new'
+#         from app/electron_application.rb:65:in `<main>'
+# rake aborted!
+# Command failed with status (1): [ruby -I app/ app/electron_application.rb...]
+sed -i '' -e 's/ENCRYPTION_PWD=.*/ENCRYPTION_PWD=Digest::SHA1.digest("11_Encrypt_11")[0...16]/' \
+    $target/home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/constants.rb
+
+rm $target/usr/local/bin/qemu-arm-static
+
+umount $target
+
+ggatel destroy -u $unit

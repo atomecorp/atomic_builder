@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# PROVIDE: eve
+# REQUIRE: DAEMON
+#
+# Add the following lines to /etc/rc.conf to run eve:
+#
+# eve_enable (bool):	Set it to "YES" to enable eve.
+#			Default is "NO".
+#
+
+. /etc/rc.subr
+
+name="eve"
+rcvar=`set_rcvar`
+
+load_rc_config ${name}
+
+: ${eve_enable="NO"}
+eve_user="freebsd"
+eve_chdir="/home/freebsd/eVe"
+
+pidfile="/tmp/${name}.pid"
+command=/usr/sbin/daemon
+command_args="-f -P ${pidfile} /usr/local/bin/bundle exec rake run:headless"
+
+export HOME=/home/freebsd
+export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
+
+run_rc_command "$1"
