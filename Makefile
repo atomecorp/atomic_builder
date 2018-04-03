@@ -10,7 +10,7 @@ create-jail:
 	sudo poudriere jail -c -j ${JAIL} -a arm.armv7 -m svn+https -v head -K BEAGLEBONE -J4
 
 update-jail:
-	sudo poudriere bulk -u -j ${JAIL} -J4
+	sudo poudriere jail -u -j ${JAIL} -J4
 
 build-run-depends:
 	sudo poudriere bulk -j ${JAIL} -p ${PORTSTREE} -f ${.CURDIR}/run-depends
