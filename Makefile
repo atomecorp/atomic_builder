@@ -17,3 +17,6 @@ build-run-depends:
 
 build-image-base:
 	sudo poudriere image -c ${.CURDIR}/image-overlay -f ${.CURDIR}/run-depends -h eve.atome.io -j ${JAIL} -n eve-${TIMESTAMP} -o ${.CURDIR}/out -t tar
+
+flash:
+	sudo dd if=eve-headless-bbk of=/dev/da2 bs=1m
