@@ -56,21 +56,6 @@ mount -t devfs devfs $target/dev
 chroot $target /usr/bin/su - freebsd -c 'sh -c "cd /home/freebsd/eVe && bundle install --without electron rhodes development --deployment"'
 umount $target/dev
 
-# /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/util/common_util.rb:177:in `key=': key must be 16 bytes (ArgumentError)
-#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/util/common_util.rb:177:in `encrypt'
-#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-client-core-0.2.58/libs/eve-client-core/eve-client-core/db/client_db.rb:103:in `insert_object'
-#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-client-core-0.2.58/libs/eve-client-core/eve-client-core/db/client_db.rb:322:in `insert_default_objects'
-#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-client-core-0.2.58/libs/eve-client-core/eve-client-core/db/client_db.rb:304:in `do_db_initialize'
-#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/db/base_db.rb:48:in `db_initialize'
-#         from /home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/electron-util-0.3.23/libs/electron-util/app/base_electron_application.rb:52:in `initialize'
-#         from app/electron_application.rb:25:in `initialize'
-#         from app/electron_application.rb:65:in `new'
-#         from app/electron_application.rb:65:in `<main>'
-# rake aborted!
-# Command failed with status (1): [ruby -I app/ app/electron_application.rb...]
-sed -i '' -e 's/ENCRYPTION_PWD=.*/ENCRYPTION_PWD=Digest::SHA1.digest("11_Encrypt_11")[0...16]/' \
-    $target/home/freebsd/eVe/vendor/bundle/ruby/2.4/gems/eve-core-0.41.alpha.14/libs/eve-core/eve_core/constants.rb
-
 rm $target/usr/local/bin/qemu-arm-static
 
 umount $target
