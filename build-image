@@ -1,20 +1,25 @@
 #!/bin/sh
 
-set -ex
-
 base_image_tarball=out/eve-20180309.txz
 eve_tarball=/tmp/eVe.tgz
 
 unit=0
 
-image=eve-image
+image=eve-headless-bbk
+
+if [ $(id -u) -ne 0 ]; then
+	echo "$0 must be run as root"
+	exit 1
+fi
 
 if [ -f $image ]; then
 	echo "File exists: $image" >&2
 	exit 1
 fi
 
-truncate -s 650M $image
+set -ex
+
+truncate -s 800M $image
 
 ggatel create -u $unit $image
 
