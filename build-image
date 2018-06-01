@@ -32,15 +32,19 @@ gpart set -a active -i 1 ggate${unit}
 newfs_msdos -F 12 /dev/ggate${unit}s1
 
 gpart create -s BSD ggate${unit}s2
-gpart add -t freebsd-ufs -a 64k ggate${unit}s2
+gpart add -t freebsd-ufs -a 64k -s 600M ggate${unit}s2
 
 newfs /dev/ggate${unit}s2a
 
+gpart add -t freebsd-ufs -a 64k -i 4 ggate${unit}s2
+newfs /dev/ggate${unit}s2d
 
 
 target=$(mktemp -d)
 
 mount /dev/ggate${unit}s2a $target
+install -d -o root -g wheel -m 755 $target/home
+mount /dev/ggate${unit}s2d $target/home
 
 tar xf "${base_image_tarball}" -C $target
 
@@ -64,6 +68,7 @@ umount $target/dev
 
 rm $target/usr/local/bin/qemu-arm-static
 
+umount $target/home
 umount $target
 
 ggatel destroy -u $unit
