@@ -45,8 +45,9 @@ mount /dev/ggate${unit}s2a $target
 tar xf "${base_image_tarball}" -C $target
 
 mount_msdosfs /dev/ggate${unit}s1 $target/mnt
-cp /usr/local/share/u-boot/u-boot-beaglebone/MLO $target/mnt
-cp /usr/local/share/u-boot/u-boot-beaglebone/u-boot.img $target/mnt
+tar xf u-boot-beaglebone-2017.01.00.2.txz --strip-components 5 /usr/local/share/u-boot/u-boot-beaglebone/MLO /usr/local/share/u-boot/u-boot-beaglebone/u-boot.img
+cp u-boot-beaglebone/MLO $target/mnt
+cp u-boot-beaglebone/u-boot.img $target/mnt
 cp $target/boot/ubldr $target/mnt
 cp $target/boot/ubldr.bin $target/mnt
 umount $target/mnt
