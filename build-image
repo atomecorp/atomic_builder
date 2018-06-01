@@ -1,6 +1,6 @@
 #!/bin/sh
 
-base_image_tarball=out/eve-20180309.txz
+base_image_tarball=$(ls out/eve-*.txz | tail -n 1)
 eve_tarball=/tmp/eVe.tgz
 
 unit=0
