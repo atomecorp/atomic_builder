@@ -3,11 +3,13 @@ PORTSTREE=	default
 
 TIMESTAMP!=	date '+%Y%m%d'
 
+NCPU!=		sysctl -n hw.ncpu
+
 all:
 	@echo 'usage: make <TARGET>'
 
 create-jail:
-	sudo poudriere jail -c -j ${JAIL} -a arm.armv7 -m svn+https -v head -K BEAGLEBONE -J4
+	sudo poudriere jail -c -j ${JAIL} -a arm.armv7 -m svn+https -v head -K BEAGLEBONE -J${NCPU}
 
 update-jail:
 	sudo poudriere jail -u -j ${JAIL} -J4
