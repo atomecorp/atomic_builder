@@ -1,2 +1,4 @@
 out
 u-boot-beaglebone
+/dts/am335x-beaglebone-tscadc.dtbo
+/image-overlay/boot/dtb

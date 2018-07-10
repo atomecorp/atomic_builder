@@ -18,6 +18,7 @@ build-run-depends:
 	sudo poudriere bulk -j ${JAIL} -p ${PORTSTREE} -f ${.CURDIR}/run-depends
 
 build-image-base:
+	cd dts && ${MAKE} install
 	sudo poudriere image -c ${.CURDIR}/image-overlay -f ${.CURDIR}/run-depends -h eve.atome.io -j ${JAIL} -n eve-${TIMESTAMP} -o ${.CURDIR}/out -t tar
 
 flash:
