@@ -1,4 +1,4 @@
-JAIL=		FreeBSD:12:arm
+JAIL=		12_CURRENT_arm
 PORTSTREE=	default
 
 TIMESTAMP!=	date '+%Y%m%d'
