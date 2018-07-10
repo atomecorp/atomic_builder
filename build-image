@@ -46,7 +46,7 @@ mount /dev/ggate${unit}s2a $target
 install -d -o root -g wheel -m 755 $target/home
 mount /dev/ggate${unit}s2d $target/home
 
-tar xf "${base_image_tarball}" -C $target
+tar xf "${base_image_tarball}" --exclude nxb-bin -C $target
 
 mount_msdosfs /dev/ggate${unit}s1 $target/mnt
 tar xf u-boot-beaglebone-2017.01.00.2.txz --strip-components 5 /usr/local/share/u-boot/u-boot-beaglebone/MLO /usr/local/share/u-boot/u-boot-beaglebone/u-boot.img
@@ -57,6 +57,9 @@ cp $target/boot/ubldr.bin $target/mnt
 umount $target/mnt
 
 cp /usr/local/bin/qemu-arm-static $target/usr/local/bin
+
+chroot $target /usr/bin/sed -i '' -e 's|/nxb-bin||g' /usr/local/lib/ruby/2.4/armv7-freebsd12/rbconfig.rb
+
 chroot $target /usr/sbin/pw user add freebsd
 mkdir -p $target/home/freebsd
 tar zxf "${eve_tarball}" -C $target/home/freebsd
