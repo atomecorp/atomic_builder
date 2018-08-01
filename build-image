@@ -69,6 +69,8 @@ mount -t devfs devfs $target/dev
 chroot $target /usr/bin/su - freebsd -c 'sh -c "cd /home/freebsd/eVe && bundle install --without electron rhodes development --deployment"'
 umount $target/dev
 
+chroot $target /usr/sbin/kldxref /boot/kernel /boot/modules
+
 rm $target/usr/local/bin/qemu-arm-static
 
 umount $target/home
