@@ -12,9 +12,13 @@ if [ $(id -u) -ne 0 ]; then
 	exit 1
 fi
 
-if [ -f $image ]; then
-	echo "File exists: $image" >&2
+if [ ! -f /tmp/eVe.tgz ]; then
+	echo "File not found: /tmp/eVe.tgz" >&2
 	exit 1
+fi
+
+if [ -f $image ]; then
+	rm -f $image
 fi
 
 set -ex
