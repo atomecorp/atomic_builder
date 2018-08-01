@@ -23,3 +23,4 @@ build-image-base:
 
 flash:
 	sudo dd if=eve-headless-bbk of=/dev/da2 bs=1m
+	sync
