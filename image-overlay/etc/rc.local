@@ -1,1 +1,1 @@
-echo sAaAj > /dev/led/beaglebone:green:heartbeat
+# echo sAaAj > /dev/led/beaglebone:green:heartbeat
