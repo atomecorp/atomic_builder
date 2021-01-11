@@ -1,0 +1,62 @@
+#!/bin/sh
+
+unit=0
+
+image=eve-headless-bbk
+base_image="FreeBSD-13.0-CURRENT-arm-armv7-GENERICSD-20210107-f2b794e1e90-255641.img"
+
+if [ $(id -u) -ne 0 ]; then
+	echo "$0 must be run as root"
+	exit 1
+fi
+
+if [ -f $image ]; then
+	rm -f $image
+fi
+
+set -ex
+
+if [ ! -f "${base_image}" ]; then
+	if [ ! -f "${base_image}.xz" ]; then
+		fetch "http://ftp.freebsd.org/pub/FreeBSD/snapshots/arm/armv7/ISO-IMAGES/13.0/${base_image}.xz"
+	fi
+	unxz "${base_image}.xz"
+fi
+
+if [ ! -f "/usr/local/bin/qemu-arm-static" ]; then
+	pkg install -y qemu-user-static
+	/usr/local/etc/rc.d/qemu_user_static start
+fi
+
+cp "${base_image}" "${image}"
+
+ggatel create -u $unit $image
+
+sleep 2
+
+target=$(mktemp -d)
+
+mount /dev/ggate${unit}s2a $target
+/sbin/mount -t devfs devfs $target/dev
+
+cp -R image-overlay/* $target
+
+mkdir -p $target/usr/local/bin
+
+cp /usr/local/bin/qemu-arm-static $target/usr/local/bin
+
+chroot $target /usr/sbin/pkg install -y sqlite3 rubygem-bundler git-lite node12
+chroot $target /usr/bin/sed -i '' -e 's|/nxb-bin||g' "/usr/local/lib/ruby/2.7/armv7-freebsd13/rbconfig.rb"
+
+chroot $target /usr/bin/su - freebsd -c "git clone --branch Work https://github.com/atomecorp/atome.git /home/freebsd/atome"
+
+chroot $target /usr/bin/su - freebsd -c "cd /home/freebsd/atome && bundle config path /home/freebsd/.vendor"
+chroot $target /usr/bin/su - freebsd -c "bundle config set without 'electron rhodes development'"
+chroot $target /usr/bin/su - freebsd -c "cd /home/freebsd/atome && bundle install -j4"
+
+rm $target/usr/local/bin/qemu-arm-static
+
+umount $target/dev
+umount $target
+
+ggatel destroy -u $unit
