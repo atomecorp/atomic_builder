@@ -2,7 +2,7 @@
 
 unit=0
 
-image=atome-headless-bbk.img
+image=eve-headless-bbk
 base_image="FreeBSD-13.0-CURRENT-arm-armv7-GENERICSD-20210107-f2b794e1e90-255641.img"
 
 if [ $(id -u) -ne 0 ]; then
