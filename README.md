@@ -9,7 +9,6 @@ MBR
 qemu_user_static_enable="YES"
 
 sudo /usr/local/etc/rc.d/qemu_user_static start
-etc/rc
 
 sudo ./atome_builder
 
