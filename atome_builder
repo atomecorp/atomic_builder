@@ -67,7 +67,7 @@ sleep 2
 if [ -n "$growfs" ]; then
 	gpart recover /dev/ggate${unit}
 	gpart resize -i $(echo $rootpart | sed 's/^[^0-9]*\([0-9]*\).*$/\1/') /dev/ggate${unit}
-	growfs /dev/ggate${unit}${rootpart}
+	growfs -y /dev/ggate${unit}${rootpart}
 fi
 
 target=$(mktemp -d)
