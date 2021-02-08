@@ -13,4 +13,4 @@ sudo /usr/local/etc/rc.d/qemu_user_static start
 sudo ./atome_builder
 
 the copy to USB using : 
-sudo dd if=eve-headless-bbk  of=/dev/da0 bs="1M"
+sudo dd if=atome-arm.img  of=/dev/da0 bs="1M"
