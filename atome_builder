@@ -85,7 +85,7 @@ fi
 
 chroot $target /usr/sbin/pkg install -y sqlite3 rubygem-bundler git-lite node12
 
-if [ "$target" = "arm" ]; then
+if [ "$architecture" = "arm" ]; then
 	chroot $target /usr/bin/sed -i '' -e 's|/nxb-bin||g' "/usr/local/lib/ruby/2.7/armv7-freebsd13/rbconfig.rb"
 fi
 
