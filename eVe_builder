@@ -94,7 +94,7 @@ if [ "$create_user" -eq 1 ]; then
 fi
 
 chroot $target /usr/bin/su - freebsd -c "git clone --branch Work https://github.com/atomecorp/atome.git /home/freebsd/atome"
-chroot $target /usr/bin/su - freebsd -c "git clone --branch Work https://github.com/atomecorp/eVe.git /home/freebsd/atome/eVe"
+chroot $target /usr/bin/su - freebsd -c "git clone --branch master https://github.com/atomecorp/eVe.git /home/freebsd/atome/eVe"
 
 
 
