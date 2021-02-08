@@ -19,7 +19,7 @@ case $architecture in
 		xbuild=0
 		rootpart="p4"
 		create_user=1
-		growfs="+1G"
+		growfs="+2G"
 		;;
 	*)
 		echo "usage: $0 architecture"
