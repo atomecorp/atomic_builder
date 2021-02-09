@@ -12,7 +12,7 @@ sudo /usr/local/etc/rc.d/qemu_user_static start
 
 sudo ./eVe_builder amd64 
 or for an arm image
-sudo ./eVe_builder arm
+sudo ./atome_builder arm
 
 then copy to USB using : 
 
