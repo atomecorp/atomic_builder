@@ -29,7 +29,7 @@ case $architecture in
 		;;
 esac
 
-image="atome-${architecture}.img"
+image="eVe-${architecture}.img"
 
 if [ $(id -u) -ne 0 ]; then
 	echo "$0 must be run as root"
