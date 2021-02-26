@@ -1,5 +1,5 @@
 pw adduser firefox -m
-pkg install firefox fvwm slim xorg-minimal
+pkg install -y firefox fvwm slim xorg-minimal
 
 sysrc dbus_enable=yes
 sysrc slim_enable=yes
