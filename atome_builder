@@ -93,7 +93,7 @@ if [ "$create_user" -eq 1 ]; then
 	chroot $target /usr/sbin/pw user add freebsd -m
 fi
 
-chroot $target /usr/bin/su - freebsd -c "git clone --branch Work https://github.com/atomecorp/atome.git /home/freebsd/atome"
+chroot $target /usr/bin/su - freebsd -c "git clone --branch master https://github.com/atomecorp/atome.git /home/freebsd/atome"
 
 chroot $target /usr/bin/su - freebsd -c "cd /home/freebsd/atome && bundle config path /home/freebsd/.vendor"
 chroot $target /usr/bin/su - freebsd -c "bundle config set without 'electron rhodes development'"
