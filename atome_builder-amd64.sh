@@ -6,5 +6,5 @@ sysrc slim_enable=yes
 
 sed -i '' \
 	-e 's/^#default_user.*/default_user firefox/' \
-	-e 's/^#auto_login/auto_login yes/' \
+	-e 's/^#auto_login.*/auto_login yes/' \
 	/usr/local/etc/slim.conf
