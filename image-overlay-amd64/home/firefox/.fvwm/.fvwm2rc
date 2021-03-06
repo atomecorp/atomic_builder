@@ -1,0 +1,2 @@
+DesktopSize 1x1
+Exec exec /usr/local/bin/firefox --kiosk http://localhost:9292

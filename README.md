@@ -10,7 +10,10 @@ qemu_user_static_enable="YES"
 
 sudo /usr/local/etc/rc.d/qemu_user_static start
 
-sudo ./atome_builder
+sudo ./eVe_builder amd64 
+or for an arm image
+sudo ./atome_builder arm
 
-the copy to USB using : 
-sudo dd if=eve-headless-bbk  of=/dev/da0 bs="1M"
+then copy to USB using : 
+
+sudo dd if=atome-arm.img  of=/dev/da0 bs="1M"

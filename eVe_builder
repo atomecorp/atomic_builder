@@ -19,7 +19,7 @@ case $architecture in
 		xbuild=0
 		rootpart="p4"
 		create_user=1
-		growfs="+3G"
+		growfs="+2G"
 		;;
 	*)
 		echo "usage: $0 architecture"
@@ -29,7 +29,7 @@ case $architecture in
 		;;
 esac
 
-image="atome-${architecture}.img"
+image="eVe-${architecture}.img"
 
 if [ $(id -u) -ne 0 ]; then
 	echo "$0 must be run as root"
@@ -93,19 +93,14 @@ if [ "$create_user" -eq 1 ]; then
 	chroot $target /usr/sbin/pw user add freebsd -m
 fi
 
-chroot $target /usr/bin/su - freebsd -c "git clone --branch master https://github.com/atomecorp/atome.git /home/freebsd/atome"
+chroot $target /usr/bin/su - freebsd -c "git clone --branch Work https://github.com/atomecorp/atome.git /home/freebsd/atome"
+chroot $target /usr/bin/su - freebsd -c "git clone --branch master https://github.com/atomecorp/eVe.git /home/freebsd/atome/eVe"
+
+
 
 chroot $target /usr/bin/su - freebsd -c "cd /home/freebsd/atome && bundle config path /home/freebsd/.vendor"
 chroot $target /usr/bin/su - freebsd -c "bundle config set without 'electron rhodes development'"
 chroot $target /usr/bin/su - freebsd -c "cd /home/freebsd/atome && bundle install -j4"
-
-if [ -d "image-overlay-${architecture}" ]; then
-	cp -R image-overlay-${architecture}/* $target
-fi
-
-if [ -f "atome_builder-${architecture}.sh" ]; then
-	chroot $target /bin/sh < atome_builder-${architecture}.sh
-fi
 
 if [ "${xbuild}" -eq 1 ]; then
 	rm $target/usr/local/bin/qemu-arm-static

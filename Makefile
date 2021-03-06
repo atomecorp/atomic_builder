@@ -32,3 +32,10 @@ eve-bbk-${TIMESTAMP}.xz: eve-headless-bbk
 
 upload: eve-bbk-${TIMESTAMP}.xz
 	echo "put eve-bbk-${TIMESTAMP}.xz" | cadaver https://private.atome.io:9090/remote.php/webdav/Romain/
+
+.SUFFIXES: .img .vmdk
+
+.img.vmdk:
+	VBoxManage internalcommands createrawvmdk -filename ${.TARGET} -rawdisk ${.IMPSRC}
+
+.include <bsd.init.mk>
