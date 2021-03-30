@@ -1,0 +1,4 @@
+DesktopSize 1x1
+Style "Chromium-browser" !Title, HandleWidth 0, !UsePPosition !UseUSPosition
+
+Exec exec /usr/local/bin/chrome --app=http://localhost:9292 --kiosk
