@@ -8,9 +8,12 @@ case $architecture in
 		variant=armv7
 		base_image="FreeBSD-13.0-STABLE-arm-armv7-GENERICSD-20211021-e058d44fda3-247742.img"
 		base_url="http://ftp.freebsd.org/pub/FreeBSD/snapshots/arm/armv7/ISO-IMAGES/13.0/"
+		base_image="FreeBSD-13.0-RELEASE-arm-armv7-GENERICSD.img"
+		base_url="http://ftp.freebsd.org/pub/FreeBSD/releases/arm/armv7/ISO-IMAGES/13.0/"
 		xbuild=1
 		rootpart="s2a"
 		create_user=0
+		growfs="+4G"
 		;;
 	"amd64")
 		variant=$architecture
@@ -67,6 +70,11 @@ sleep 2
 if [ -n "$growfs" ]; then
 	gpart recover /dev/ggate${unit}
 	gpart resize -i $(echo $rootpart | sed 's/^[^0-9]*\([0-9]*\).*$/\1/') /dev/ggate${unit}
+	case $rootpart in
+		s2a)
+			gpart resize -i 1 /dev/ggate${unit}s2
+			;;
+	esac
 	growfs -y /dev/ggate${unit}${rootpart}
 fi
 
@@ -101,8 +109,8 @@ if [ "$create_user" -eq 1 ]; then
 fi
  
 
-chroot $target /usr/bin/su - freebsd -c "git clone --branch master https://github.com/atomecorp/atome.git /home/freebsd/atome"
-chroot $target /usr/bin/su - freebsd -c "git clone --branch master https://github.com/atomecorp/third_parties.git /home/freebsd/atome/www/public/js/third_parties"
+chroot $target /usr/bin/su - freebsd -c "git clone --branch master --depth 1 https://github.com/atomecorp/atome.git /home/freebsd/atome"
+chroot $target /usr/bin/su - freebsd -c "git clone --branch master --depth 1 https://github.com/atomecorp/third_parties.git /home/freebsd/atome/www/public/js/third_parties"
 
 chroot $target /usr/bin/su - freebsd -c "cd /home/freebsd/atome && bundle config path /home/freebsd/.vendor"
 chroot $target /usr/bin/su - freebsd -c "bundle config set without 'electron rhodes development'"
